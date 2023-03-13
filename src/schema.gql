@@ -1,0 +1,71 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Reclamo {
+  id: String!
+  nro: Int!
+  descripcion: String!
+  detalleDeCompra: String!
+  problema: String!
+}
+
+type User {
+  id: String!
+  username: String!
+  password: String!
+}
+
+type LoginResponse {
+  accessToken: String!
+  user: User!
+}
+
+type Query {
+  reclamos(limit: Int!, offset: Int!): [Reclamo!]!
+  reclamo(id: String!): Reclamo!
+  users(limit: Float!, offset: Float!): [User!]!
+  user(id: String!): User!
+  userByUsername(username: String!): User!
+}
+
+type Mutation {
+  createReclamo(createReclamoDTO: CreateReclamoDTO!): Reclamo!
+  updateReclamo(id: String!, updateReclamoDTO: UpdateReclamoDTO!): Reclamo!
+  deleteReclamo(id: String!): Boolean!
+  createUser(createUserDTO: CreateUserDTO!): User!
+  updateUser(updateUserDTO: UpdateUserDTO!, id: String!): User!
+  removeUser(id: String!): User!
+  login(loginUserInput: LoginInput!): LoginResponse!
+  register(CreateUserInput: CreateUserDTO!): User!
+}
+
+input CreateReclamoDTO {
+  nro: Int!
+  descripcion: String!
+  detalleDeCompra: String!
+  problema: String!
+}
+
+input UpdateReclamoDTO {
+  nro: Int
+  descripcion: String
+  detalleDeCompra: String
+  problema: String
+}
+
+input CreateUserDTO {
+  username: String!
+  password: String!
+}
+
+input UpdateUserDTO {
+  username: String
+  password: String
+  id: Int!
+}
+
+input LoginInput {
+  username: String!
+  password: String!
+}
