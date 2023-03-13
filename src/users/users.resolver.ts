@@ -12,7 +12,7 @@ export class UsersResolver {
   
   @Query(() => [User])
   @UseGuards(JWTAuthGuard)
-  users(@Args('limit') limit: number, @Args('offset') offset: number): Promise<User[]> {
+  users(@Args('limit', { type: () => Int, nullable: true }) limit: number, @Args('offset', { type: () => Int, nullable: true }) offset: number): Promise<User[]> {
     return this.usersService.findAll(limit, offset);
   }
 

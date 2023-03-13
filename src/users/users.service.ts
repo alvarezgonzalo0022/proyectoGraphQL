@@ -29,6 +29,10 @@ export class UsersService {
   }
 
   async findAll(limit: number, offset: number): Promise<User[]> {
+
+    !limit ? limit = 10 : limit;
+    !offset ? offset = 0 : offset;
+
     return await this.userRepository.find({
       take: limit,
       skip: offset,

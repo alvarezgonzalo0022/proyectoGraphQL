@@ -15,7 +15,7 @@ export class ReclamosResolver {
     
     @Query((returns) => [Reclamo])
     @UseGuards(JWTAuthGuard)
-    reclamos(@Args('limit', { type: () => Int }) limit: number, @Args('offset', { type: () => Int }) offset: number): Promise<Reclamo[]> {
+    reclamos(@Args('limit', { type: () => Int, nullable: true }) limit: number, @Args('offset', { type: () => Int, nullable: true }) offset: number): Promise<Reclamo[]> {
         return this.reclamosService.findAll(limit, offset);
     }
 

@@ -15,6 +15,9 @@ export class ReclamosService {
 
     async findAll(limit: number, offset: number): Promise<Reclamo[]> {
 
+        !limit ? limit = 10 : limit;
+        !offset ? offset = 0 : offset;
+
         return await this.reclamosRepository.find({
             skip: offset,
             take: limit,

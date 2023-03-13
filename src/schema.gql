@@ -22,9 +22,9 @@ type LoginResponse {
 }
 
 type Query {
-  reclamos(limit: Int!, offset: Int!): [Reclamo!]!
+  reclamos(limit: Int, offset: Int): [Reclamo!]!
   reclamo(id: String!): Reclamo!
-  users(limit: Float!, offset: Float!): [User!]!
+  users(limit: Int, offset: Int): [User!]!
   user(id: String!): User!
   userByUsername(username: String!): User!
 }
