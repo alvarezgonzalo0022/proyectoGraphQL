@@ -1,15 +1,16 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
 import { IsString } from 'class-validator';
+import { User } from '../entities/user.entity';
 
 @InputType()
 export class CreateUserDTO {
   
-  @Field()
   @IsString()
+  @Field()
   username: string;
 
-  @Field()
   @IsString()
+  @Field()
   password: string;
 
 }

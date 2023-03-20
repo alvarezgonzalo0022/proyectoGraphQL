@@ -2,18 +2,20 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type User {
+  id: String!
+  username: String!
+  password: String!
+  reclamos: [Reclamo!]!
+}
+
 type Reclamo {
   id: String!
   nro: Int!
   descripcion: String!
   detalleDeCompra: String!
   problema: String!
-}
-
-type User {
-  id: String!
-  username: String!
-  password: String!
+  user: User!
 }
 
 type LoginResponse {
@@ -22,11 +24,17 @@ type LoginResponse {
 }
 
 type Query {
-  reclamos(limit: Int, offset: Int): [Reclamo!]!
+  reclamos(paginationDTO: PaginationDTO!): [Reclamo!]!
   reclamo(id: String!): Reclamo!
-  users(limit: Int, offset: Int): [User!]!
+  reclamosPorPalabra(palabra: String!): [Reclamo!]!
+  users(paginationDTO: PaginationDTO!): [User!]!
   user(id: String!): User!
   userByUsername(username: String!): User!
+}
+
+input PaginationDTO {
+  limit: Int
+  offset: Int
 }
 
 type Mutation {
@@ -45,6 +53,13 @@ input CreateReclamoDTO {
   descripcion: String!
   detalleDeCompra: String!
   problema: String!
+  idUser: String
+  user: CreateUserDTO
+}
+
+input CreateUserDTO {
+  username: String!
+  password: String!
 }
 
 input UpdateReclamoDTO {
@@ -54,15 +69,9 @@ input UpdateReclamoDTO {
   problema: String
 }
 
-input CreateUserDTO {
-  username: String!
-  password: String!
-}
-
 input UpdateUserDTO {
   username: String
   password: String
-  id: Int!
 }
 
 input LoginInput {

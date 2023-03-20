@@ -1,36 +1,63 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Reclamo } from './entity/reclamo.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Column, Like, Repository } from 'typeorm';
 import { CreateReclamoDTO } from './dto/create-reclamo.dto';
 import { UpdateReclamoDTO } from './dto/update-reclamo.dto';
+import { UsersService } from 'src/users/users.service';
+import { PaginationDTO } from 'src/common/dto/pagination.dto';
 
 @Injectable()
 export class ReclamosService {
 
     constructor(
         @InjectRepository(Reclamo)
-        private readonly reclamosRepository: Repository<Reclamo>
+        private readonly reclamosRepository: Repository<Reclamo>,
+        private readonly usersService: UsersService
     ) {}
 
-    async findAll(limit: number, offset: number): Promise<Reclamo[]> {
+    async findAll(paginationDTO: PaginationDTO): Promise<Reclamo[]> {
 
-        !limit ? limit = 10 : limit;
-        !offset ? offset = 0 : offset;
+        const { limit = 10, offset = 0 } = paginationDTO;
 
         return await this.reclamosRepository.find({
             skip: offset,
             take: limit,
         })
     }
-
+    
     async findOne(id: string): Promise<Reclamo> {
         return await this.reclamosRepository.findOneBy({id});
     }
+    
+    async findMany(term: string): Promise<Reclamo[]> {
+        const reclamos = await this.reclamosRepository.find({
+            where: {
+                descripcion: Like(`%${term}%`),
+                problema: Like(`%${term}%`),
+            }
+        });
+        return reclamos;
+    }
 
     async create(reclamo: CreateReclamoDTO): Promise<Reclamo> {
-        const reclamoAGuardar = await this.reclamosRepository.create(reclamo);
-        return await this.reclamosRepository.save(reclamoAGuardar);
+        
+
+        if(!reclamo.idUser && !reclamo.user) throw new BadRequestException('Debe ingresar un usuario');
+        if(reclamo.idUser && reclamo.user) throw new BadRequestException('Debe ingresar un usuario o un usuario nuevo, no ambos');
+
+        try {
+            
+            const reclamoAGuardar = await this.reclamosRepository.create({
+                ...reclamo,
+                user: reclamo.idUser ? await this.usersService.findOneByID(reclamo.idUser) : await this.usersService.create(reclamo.user)
+            });
+            return await this.reclamosRepository.save(reclamoAGuardar);
+
+        } catch (error) {
+            console.log(error);
+            throw new Error("Error al crear el reclamo");      
+        }
     }
 
     async update(id: string, reclamo: UpdateReclamoDTO): Promise<Reclamo> {
@@ -40,8 +67,8 @@ export class ReclamosService {
 
         try {
             const reclamoAGuardar = {
-                ...reclamoAActualizar,
                 ...reclamo,
+                ...reclamoAActualizar,
             }
             await this.reclamosRepository.save(reclamoAGuardar);
             return reclamoAGuardar;
@@ -66,4 +93,5 @@ export class ReclamosService {
             
         }
     }
+
 }

@@ -5,6 +5,7 @@ import { CreateReclamoDTO } from './dto/create-reclamo.dto';
 import { UpdateReclamoDTO } from './dto/update-reclamo.dto';
 import { UseGuards } from '@nestjs/common';
 import { JWTAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { PaginationDTO } from 'src/common/dto/pagination.dto';
 
 @Resolver()
 export class ReclamosResolver {
@@ -15,8 +16,8 @@ export class ReclamosResolver {
     
     @Query((returns) => [Reclamo])
     @UseGuards(JWTAuthGuard)
-    reclamos(@Args('limit', { type: () => Int, nullable: true }) limit: number, @Args('offset', { type: () => Int, nullable: true }) offset: number): Promise<Reclamo[]> {
-        return this.reclamosService.findAll(limit, offset);
+    reclamos(@Args("paginationDTO") paginationDTO: PaginationDTO): Promise<Reclamo[]> {
+        return this.reclamosService.findAll(paginationDTO);
     }
 
     @Query((returns) => Reclamo)
@@ -25,9 +26,14 @@ export class ReclamosResolver {
         return this.reclamosService.findOne(id);
     }
 
+    @Query((returns) => [Reclamo])
+    reclamosPorPalabra(@Args('palabra') palabra: string): Promise<Reclamo[]> {
+        return this.reclamosService.findMany(palabra);
+    }
+
     @Mutation((returns) => Reclamo)
     @UseGuards(JWTAuthGuard)
-    createReclamo(@Args('createReclamoDTO') createReclamoDTO: CreateReclamoDTO): Promise<Reclamo> {
+    createReclamo(@Args('createReclamoDTO') createReclamoDTO: CreateReclamoDTO): Promise<Reclamo> {        
         return this.reclamosService.create(createReclamoDTO);
     }
 

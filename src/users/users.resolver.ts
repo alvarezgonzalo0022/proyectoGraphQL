@@ -5,6 +5,7 @@ import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
 import { UseGuards } from '@nestjs/common';
 import { JWTAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { PaginationDTO } from 'src/common/dto/pagination.dto';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -12,12 +13,11 @@ export class UsersResolver {
   
   @Query(() => [User])
   @UseGuards(JWTAuthGuard)
-  users(@Args('limit', { type: () => Int, nullable: true }) limit: number, @Args('offset', { type: () => Int, nullable: true }) offset: number): Promise<User[]> {
-    return this.usersService.findAll(limit, offset);
+  users(@Args('paginationDTO') paginationDTO: PaginationDTO): Promise<User[]> {
+    return this.usersService.findAll(paginationDTO);
   }
 
   @Mutation(() => User)
-  @UseGuards(JWTAuthGuard)
   createUser(@Args('createUserDTO') createUserDTO: CreateUserDTO): Promise<User> {
     return this.usersService.create(createUserDTO);
   }

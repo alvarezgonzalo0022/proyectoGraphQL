@@ -1,5 +1,6 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "src/users/entities/user.entity";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("reclamos")
 @ObjectType()
@@ -9,7 +10,8 @@ export class Reclamo {
     @Field()
     id: string;
 
-    @Column('int')
+    // el unique es true pa
+    @Column('int', { unique: false })
     @Field((type) => Int)
     nro: number;
 
@@ -24,4 +26,8 @@ export class Reclamo {
     @Column('varchar')
     @Field()
     problema: string;
+
+    @ManyToOne(() => User, (user) => user.reclamos)
+    @Field((type) => User)
+    user: User;
 }
