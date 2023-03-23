@@ -22,8 +22,8 @@ export class ReclamosResolver {
 
     @Query((returns) => Reclamo)
     @UseGuards(JWTAuthGuard)
-    reclamo(@Args('id') id: string): Promise<Reclamo> {
-        return this.reclamosService.findOne(id);
+    reclamo(@Args('nro') nro: number): Promise<Reclamo> {
+        return this.reclamosService.findOne(nro);
     }
 
     @Query((returns) => [Reclamo])
@@ -33,20 +33,20 @@ export class ReclamosResolver {
 
     @Mutation((returns) => Reclamo)
     @UseGuards(JWTAuthGuard)
-    createReclamo(@Args('createReclamoDTO') createReclamoDTO: CreateReclamoDTO): Promise<Reclamo> {        
+    createReclamo(@Args('createReclamoDTO') createReclamoDTO: CreateReclamoDTO): Promise<Reclamo> {                
         return this.reclamosService.create(createReclamoDTO);
     }
 
     @Mutation((returns) => Reclamo)
     @UseGuards(JWTAuthGuard)
-    updateReclamo(@Args('id') id: string, @Args('updateReclamoDTO') updateReclamoDTO: UpdateReclamoDTO): Promise<Reclamo> {
-        return this.reclamosService.update(id, updateReclamoDTO);
+    updateReclamo(@Args('nro') nro: number, @Args('updateReclamoDTO') updateReclamoDTO: UpdateReclamoDTO): Promise<Reclamo> {
+        return this.reclamosService.update(nro, updateReclamoDTO);
     }
 
     @Mutation((returns) => Boolean)
     @UseGuards(JWTAuthGuard)
-    deleteReclamo(@Args('id') id: string): Promise<boolean> {
-        return this.reclamosService.deleteOne(id);
+    deleteReclamo(@Args('nro') nro: number): Promise<boolean> {
+        return this.reclamosService.deleteOne(nro);
     }
 
 }

@@ -10,10 +10,11 @@ export class User {
   @Field()
   id: string;
 
-  @Column('varchar')
+  @Column('varchar', {
+    unique: true,
+  })
   @Field()
   username: string;
-
 
   @Column('varchar')
   @Field()

@@ -1,39 +1,37 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFile, UseInterceptors, BadRequestException, Res } from '@nestjs/common';
 import { FilesService } from './files.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { imgFileFilter } from './helpers/imgFileFilter.helper';
 import { diskStorage } from 'multer';
-import { fileFilter, fileNamer } from './helpers/index';
-import { Response } from 'express';
+import { fileNamer } from './helpers/fileNamer.helper';
 
 @Controller('files')
 export class FilesController {
-  constructor(
-    private readonly filesService: FilesService,
-    ) {}
+  constructor(private readonly filesService: FilesService) {}
 
-  @Get('/:imageName')
-  findOne(@Res() res: Response, @Param('imageName') imageName: string) {
-
-    const path = this.filesService.getStaticProductImage(imageName);
-
-    res.sendFile(path)
+  @Get('/img/:imageName')
+  findOneImg(@Param('imageName') imageName: string, @Res() res: Express.Response) {
+    const path = this.filesService.findOneImg(imageName);
+    return path;
   }
 
-  @Post('/reclamo')
-  @UseInterceptors(FileInterceptor('file', {
-    fileFilter: fileFilter,
+  @Post('/img')
+  @UseInterceptors(FileInterceptor('img', {
+    fileFilter: imgFileFilter,
     storage: diskStorage({
-      destination: './static/products',
+      destination: './static/img',
       filename: fileNamer
     })
   }))
-  uploadProductImage(@UploadedFile() file: Express.Multer.File, ) {    
+  uploadReclamoIMG(
+    @UploadedFile() file: Express.Multer.File
+    ) {
 
-    if(!file) throw new BadRequestException(`Archivo requerido`)
+      if(!file) return new BadRequestException('Make sure that the file is an image');
 
-    const secureUrl = `http://localhost:3000/files/${file.filename}`;
+      const secureURL = `http://localhost:3002/files/img/${file.filename}`;
 
-    return { secureUrl };
+      return secureURL;
   }
-  
+
 }

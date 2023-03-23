@@ -9,12 +9,24 @@ type User {
   reclamos: [Reclamo!]!
 }
 
+type DetalleCompra {
+  id: Int!
+  fechaCompra: DateTime!
+  nroFactura: Int!
+  codProd: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Reclamo {
-  id: String!
   nro: Int!
   descripcion: String!
-  detalleDeCompra: String!
   problema: String!
+  imgURL: String
+  detalleDeCompra: DetalleCompra!
   user: User!
 }
 
@@ -25,11 +37,12 @@ type LoginResponse {
 
 type Query {
   reclamos(paginationDTO: PaginationDTO!): [Reclamo!]!
-  reclamo(id: String!): Reclamo!
+  reclamo(nro: Float!): Reclamo!
   reclamosPorPalabra(palabra: String!): [Reclamo!]!
   users(paginationDTO: PaginationDTO!): [User!]!
   user(id: String!): User!
   userByUsername(username: String!): User!
+  executeSeed: String!
 }
 
 input PaginationDTO {
@@ -39,9 +52,8 @@ input PaginationDTO {
 
 type Mutation {
   createReclamo(createReclamoDTO: CreateReclamoDTO!): Reclamo!
-  updateReclamo(id: String!, updateReclamoDTO: UpdateReclamoDTO!): Reclamo!
-  deleteReclamo(id: String!): Boolean!
-  createUser(createUserDTO: CreateUserDTO!): User!
+  updateReclamo(nro: Float!, updateReclamoDTO: UpdateReclamoDTO!): Reclamo!
+  deleteReclamo(nro: Float!): Boolean!
   updateUser(updateUserDTO: UpdateUserDTO!, id: String!): User!
   removeUser(id: String!): User!
   login(loginUserInput: LoginInput!): LoginResponse!
@@ -49,12 +61,17 @@ type Mutation {
 }
 
 input CreateReclamoDTO {
-  nro: Int!
   descripcion: String!
-  detalleDeCompra: String!
+  detalleDeCompra: DetalleCompraDTO!
+  imgURL: String
   problema: String!
   idUser: String
   user: CreateUserDTO
+}
+
+input DetalleCompraDTO {
+  nroFactura: Int!
+  codProd: String!
 }
 
 input CreateUserDTO {
@@ -65,7 +82,7 @@ input CreateUserDTO {
 input UpdateReclamoDTO {
   nro: Int
   descripcion: String
-  detalleDeCompra: String
+  detalleDeCompra: DetalleCompraDTO
   problema: String
 }
 

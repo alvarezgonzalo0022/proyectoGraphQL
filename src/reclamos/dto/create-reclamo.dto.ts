@@ -1,23 +1,22 @@
-import { Field, InputType, Int } from "@nestjs/graphql";
-import { IsNumber, IsOptional, IsPositive, IsString } from "class-validator";
+import { Field, InputType } from "@nestjs/graphql";
+import { IsOptional, IsString } from "class-validator";
 import { CreateUserDTO } from "src/users/dto/create-user.dto";
-import { User } from "src/users/entities/user.entity";
+import { DetalleCompraDTO } from "./create-detalle-compra.dto";
 
 @InputType()
 export class CreateReclamoDTO {
-
-    @IsNumber()
-    @IsPositive()
-    @Field((type) => Int)
-    nro: number;
 
     @IsString()
     @Field()
     descripcion: string;
 
+    @Field((type) => DetalleCompraDTO)
+    detalleDeCompra: DetalleCompraDTO;
+
     @IsString()
-    @Field()
-    detalleDeCompra: string;
+    @IsOptional()
+    @Field({ nullable: true })
+    imgURL?: string;
 
     @IsString()
     @Field()

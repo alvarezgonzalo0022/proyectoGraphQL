@@ -6,6 +6,7 @@ import { CreateReclamoDTO } from './dto/create-reclamo.dto';
 import { UpdateReclamoDTO } from './dto/update-reclamo.dto';
 import { UsersService } from 'src/users/users.service';
 import { PaginationDTO } from 'src/common/dto/pagination.dto';
+import { DetalleCompra } from './entity/detalleDeCompra.entity';
 
 @Injectable()
 export class ReclamosService {
@@ -13,6 +14,8 @@ export class ReclamosService {
     constructor(
         @InjectRepository(Reclamo)
         private readonly reclamosRepository: Repository<Reclamo>,
+        @InjectRepository(DetalleCompra)
+        private readonly detalleCompraRepository: Repository<DetalleCompra>,
         private readonly usersService: UsersService
     ) {}
 
@@ -26,8 +29,8 @@ export class ReclamosService {
         })
     }
     
-    async findOne(id: string): Promise<Reclamo> {
-        return await this.reclamosRepository.findOneBy({id});
+    async findOne(nro: number): Promise<Reclamo> {
+        return await this.reclamosRepository.findOneBy({nro});
     }
     
     async findMany(term: string): Promise<Reclamo[]> {
@@ -48,11 +51,17 @@ export class ReclamosService {
 
         try {
             
-            const reclamoAGuardar = await this.reclamosRepository.create({
+            const reclamoAGuardar = this.reclamosRepository.create({
                 ...reclamo,
+                detalleDeCompra: this.detalleCompraRepository.create({
+                    ...reclamo.detalleDeCompra,
+                    fechaCompra: new Date(),
+                }),
                 user: reclamo.idUser ? await this.usersService.findOneByID(reclamo.idUser) : await this.usersService.create(reclamo.user)
             });
-            return await this.reclamosRepository.save(reclamoAGuardar);
+            
+            const reclamoGuardado = await this.reclamosRepository.save(reclamoAGuardar);
+            return reclamoGuardado;
 
         } catch (error) {
             console.log(error);
@@ -60,8 +69,11 @@ export class ReclamosService {
         }
     }
 
-    async update(id: string, reclamo: UpdateReclamoDTO): Promise<Reclamo> {
-        const reclamoAActualizar = await this.reclamosRepository.findOneBy({id});
+    async update(nro: number, reclamo: UpdateReclamoDTO): Promise<Reclamo> {
+
+        if(reclamo.detalleDeCompra.fechaCompra) throw new BadRequestException('No se puede modificar la fecha de compra');
+
+        const reclamoAActualizar = await this.reclamosRepository.findOneBy({nro});
 
         if(!reclamoAActualizar) throw new BadRequestException('No existe el reclamo');
 
@@ -80,8 +92,8 @@ export class ReclamosService {
         }
     }
 
-    async deleteOne(id: string): Promise<boolean> {
-        const reclamoAEliminar = await this.reclamosRepository.findOneBy({id});
+    async deleteOne(nro: number): Promise<boolean> {
+        const reclamoAEliminar = await this.reclamosRepository.findOneBy({nro});
         if(!reclamoAEliminar) throw new BadRequestException('No existe el reclamo');
 
         try {

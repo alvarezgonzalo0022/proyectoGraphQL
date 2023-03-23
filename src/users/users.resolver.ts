@@ -17,11 +17,6 @@ export class UsersResolver {
     return this.usersService.findAll(paginationDTO);
   }
 
-  @Mutation(() => User)
-  createUser(@Args('createUserDTO') createUserDTO: CreateUserDTO): Promise<User> {
-    return this.usersService.create(createUserDTO);
-  }
-
   @Query(() => User)
   @UseGuards(JWTAuthGuard)
   user(@Args('id') id: string): Promise<User> {

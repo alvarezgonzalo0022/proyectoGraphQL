@@ -1,6 +1,8 @@
 
 import { Field, InputType, Int } from "@nestjs/graphql";
 import { IsNumber, IsOptional, IsPositive, IsString } from "class-validator";
+import { DetalleCompra } from "../entity/detalleDeCompra.entity";
+import { DetalleCompraDTO } from "./create-detalle-compra.dto";
 
 @InputType()
 export class UpdateReclamoDTO {
@@ -18,8 +20,8 @@ export class UpdateReclamoDTO {
 
     @IsString()
     @IsOptional()
-    @Field({ nullable: true })
-    detalleDeCompra?: string;
+    @Field((type) => DetalleCompraDTO , { nullable: true })
+    detalleDeCompra?: DetalleCompra;
 
     @IsString()
     @IsOptional()
