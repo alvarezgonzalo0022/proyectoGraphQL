@@ -12,11 +12,11 @@ export class DetalleCompra {
     id: number;
 
     @Column('date')
-    @Field(() => Date)
+    @Field((type) => Date)
     fechaCompra: Date;
 
     @Column('int')
-    @Field(() => Int)
+    @Field((type) => Int)
     nroFactura: number;
 
     @Column('varchar')
