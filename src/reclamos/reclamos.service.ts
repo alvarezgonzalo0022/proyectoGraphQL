@@ -57,8 +57,7 @@ export class ReclamosService {
     async create(reclamo: CreateReclamoDTO): Promise<Reclamo> {
         
 
-        if(!reclamo.idUser && !reclamo.user) throw new BadRequestException('Debe ingresar un usuario');
-        if(reclamo.idUser && reclamo.user) throw new BadRequestException('Debe ingresar un usuario o un usuario nuevo, no ambos');
+        if(!reclamo.idUser) throw new BadRequestException('Debe ingresar un usuario');
 
         try {
             
@@ -68,7 +67,7 @@ export class ReclamosService {
                     ...reclamo.detalleDeCompra,
                     fechaCompra: new Date(),
                 }),
-                user: reclamo.idUser ? await this.usersService.findOneByID(reclamo.idUser) : await this.usersService.create(reclamo.user)
+                user: await this.usersService.findOneByID(reclamo.idUser)
             });
             
             const reclamoGuardado = await this.reclamosRepository.save(reclamoAGuardar);

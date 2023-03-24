@@ -32,8 +32,4 @@ export class CreateReclamoDTO {
     @Field({ nullable: true })
     idUser?: string;
 
-    @IsOptional()
-    @Field((type) => CreateUserDTO, { nullable: true })
-    user?: CreateUserDTO;
-
 }
