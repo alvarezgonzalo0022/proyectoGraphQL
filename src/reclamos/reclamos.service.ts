@@ -32,10 +32,21 @@ export class ReclamosService {
     async findOne(nro: number): Promise<Reclamo> {
         return await this.reclamosRepository.findOneBy({nro});
     }
+
+    async findManyInTituloOrProblema(term: string): Promise<Reclamo[]> {
+        const reclamos = await this.reclamosRepository.find({
+            where: {
+                titulo: Like(`%${term}%`),
+                problema: Like(`%${term}%`),
+            }
+        });
+        return reclamos;
+    }
     
     async findMany(term: string): Promise<Reclamo[]> {
         const reclamos = await this.reclamosRepository.find({
             where: {
+                titulo: Like(`%${term}%`),
                 descripcion: Like(`%${term}%`),
                 problema: Like(`%${term}%`),
             }
@@ -103,6 +114,26 @@ export class ReclamosService {
         catch (error) {
             throw new Error("Error al eliminar el reclamo");
             
+        }
+    }
+
+    async addImgToReclamo(nro: number, imgURL: string): Promise<Reclamo> {
+        const reclamo = await this.findOne(nro);
+
+        if(!reclamo) throw new BadRequestException('No existe el reclamo');
+
+        const reclamoAGuardar = this.reclamosRepository.create({
+            ...reclamo,
+            imgURL,
+        })
+
+        try {
+            const reclamoGuardado = await this.reclamosRepository.save(reclamoAGuardar);
+            return reclamoGuardado
+        }
+        catch (error) {
+            console.log(error);
+            throw new Error("Error al agregar la imagen al reclamo");   
         }
     }
 

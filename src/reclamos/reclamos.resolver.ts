@@ -15,15 +15,18 @@ export class ReclamosResolver {
     ) {}
     
     @Query((returns) => [Reclamo])
-    @UseGuards(JWTAuthGuard)
     reclamos(@Args("paginationDTO") paginationDTO: PaginationDTO): Promise<Reclamo[]> {
         return this.reclamosService.findAll(paginationDTO);
     }
 
     @Query((returns) => Reclamo)
-    @UseGuards(JWTAuthGuard)
     reclamo(@Args('nro') nro: number): Promise<Reclamo> {
         return this.reclamosService.findOne(nro);
+    }
+
+    @Query((returns) => [Reclamo])
+    reclamosPorPalabraEnTituloOProblema(@Args('palabra') palabra: string): Promise<Reclamo[]> {
+        return this.reclamosService.findMany(palabra);
     }
 
     @Query((returns) => [Reclamo])
@@ -47,6 +50,12 @@ export class ReclamosResolver {
     @UseGuards(JWTAuthGuard)
     deleteReclamo(@Args('nro') nro: number): Promise<boolean> {
         return this.reclamosService.deleteOne(nro);
+    }
+
+    @Mutation((returns) => Reclamo)
+    @UseGuards(JWTAuthGuard)
+    addImgToReclamo(@Args('nro', { type: () => Int }) nro: number, @Args('imgURL') imgURL: string): Promise<Reclamo> {
+        return this.reclamosService.addImgToReclamo(nro, imgURL);
     }
 
 }

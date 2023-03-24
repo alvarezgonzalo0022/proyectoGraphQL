@@ -1,10 +1,15 @@
 import { Field, InputType } from "@nestjs/graphql";
-import { IsOptional, IsString } from "class-validator";
+import { IsIn, IsOptional, IsString } from "class-validator";
 import { CreateUserDTO } from "src/users/dto/create-user.dto";
 import { DetalleCompraDTO } from "./create-detalle-compra.dto";
 
 @InputType()
 export class CreateReclamoDTO {
+
+    @IsString()
+    @IsIn(["Falla", "Consulta", "Reclamo"])
+    @Field()
+    titulo: string;
 
     @IsString()
     @Field()

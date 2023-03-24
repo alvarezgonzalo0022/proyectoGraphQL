@@ -26,36 +26,36 @@ export class SeedService {
     return "Seed executed"
   }
 
-  private async insertSeedUsers(): Promise<User>{
+  private async insertSeedUsers(){
 
-    const seedUser = initialData.user;
+    const seedUsers = initialData.users;
+    const usersToSave = []
 
-    const user = this.userRepository.create({
-      ...seedUser[0],
-    });
-
-    return await this.userRepository.save(user);
-
+    seedUsers.forEach((user) => {
+      const userToSave = this.userRepository.create(user);
+      usersToSave.push(userToSave);
+    })
+    await this.userRepository.save(usersToSave);
   }
 
-  private async insertNewReclamos(): Promise<Reclamo> {
+  private async insertNewReclamos() {
 
-    const seedReclamo = initialData.reclamo;
+    const seedReclamos = initialData.reclamos;
 
-    const user = await this.userRepository.findOneBy({"username": 'test@test.com'});
+    const users = await this.userRepository.find()    
 
-    const detalleDeCompra = this.detalleCompraRepository.create({
-      ...seedReclamo[0].detalleDeCompra,
-      fechaCompra: new Date(),
+    seedReclamos.forEach(async (reclamo, index) => {
+      const detalleDeCompra = this.detalleCompraRepository.create({
+        ...reclamo.detalleDeCompra,
+        fechaCompra: new Date(),
+      })
+      const reclamoToSave = this.reclamoRepository.create({
+        ...reclamo,
+        detalleDeCompra: detalleDeCompra,
+        user: users[index],
+      })
+      await this.reclamoRepository.save(reclamoToSave);
     })
-    
-    const reclamo = this.reclamoRepository.create({
-      ...seedReclamo[0],
-      detalleDeCompra: detalleDeCompra,
-      user: user,
-    });    
-
-    return await this.reclamoRepository.save(reclamo)
   }
 
   private async deleteDatabase() {

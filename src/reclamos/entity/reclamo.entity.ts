@@ -2,6 +2,7 @@ import { Field, Int, ObjectType } from "@nestjs/graphql";
 import { User } from "src/users/entities/user.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { DetalleCompra } from "./detalleDeCompra.entity";
+import { IsString } from "class-validator";
 
 @Entity("reclamos")
 @ObjectType()
@@ -10,6 +11,10 @@ export class Reclamo {
     @PrimaryGeneratedColumn('increment')
     @Field((type) => Int)
     nro: number;
+
+    @Column('varchar')
+    @Field()
+    titulo: string;
 
     @Column('varchar')
     @Field()
@@ -29,6 +34,6 @@ export class Reclamo {
 
     @ManyToOne(() => User, (user) => user.reclamos, { cascade: true })
     @Field((type) => User)
-    @JoinColumn({ name: 'user' })
+    @JoinColumn({ name: 'userID' })
     user: User;
 }
