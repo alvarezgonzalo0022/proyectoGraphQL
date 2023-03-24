@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Reclamo } from './entity/reclamo.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Column, Like, Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { CreateReclamoDTO } from './dto/create-reclamo.dto';
 import { UpdateReclamoDTO } from './dto/update-reclamo.dto';
 import { UsersService } from 'src/users/users.service';

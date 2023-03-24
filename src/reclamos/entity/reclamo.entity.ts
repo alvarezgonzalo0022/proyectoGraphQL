@@ -2,7 +2,6 @@ import { Field, Int, ObjectType } from "@nestjs/graphql";
 import { User } from "src/users/entities/user.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { DetalleCompra } from "./detalleDeCompra.entity";
-import { IsString } from "class-validator";
 
 @Entity("reclamos")
 @ObjectType()
