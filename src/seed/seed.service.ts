@@ -26,7 +26,7 @@ export class SeedService {
     return "Seed executed"
   }
 
-  private async insertSeedUsers(){
+  private async insertSeedUsers(): Promise<User>{
 
     const seedUser = initialData.user;
 
