@@ -84,7 +84,7 @@ export class ReclamosService {
 
         if(reclamo.detalleDeCompra.fechaCompra) throw new BadRequestException('No se puede modificar la fecha de compra');
 
-        const reclamoAActualizar = await this.reclamosRepository.findOneBy({nro});
+        const reclamoAActualizar = await this.findOne(nro);
 
         if(!reclamoAActualizar) throw new BadRequestException('No existe el reclamo');
 
@@ -104,7 +104,7 @@ export class ReclamosService {
     }
 
     async deleteOne(nro: number): Promise<boolean> {
-        const reclamoAEliminar = await this.reclamosRepository.findOneBy({nro});
+        const reclamoAEliminar = await this.findOne(nro);
         if(!reclamoAEliminar) throw new BadRequestException('No existe el reclamo');
 
         try {
