@@ -63,10 +63,7 @@ export class ReclamosService {
             
             const reclamoAGuardar = this.reclamosRepository.create({
                 ...reclamo,
-                detalleDeCompra: this.detalleCompraRepository.create({
-                    ...reclamo.detalleDeCompra,
-                    fechaCompra: new Date(),
-                }),
+                detalleDeCompra: this.detalleCompraRepository.create(reclamo.detalleDeCompra),
                 user: await this.usersService.findOneByID(reclamo.idUser)
             });
             

@@ -1,8 +1,12 @@
 import { Field, InputType, Int } from "@nestjs/graphql";
-import { IsNumber, IsString } from "class-validator";
+import { IsDate, IsNumber, IsString } from "class-validator";
 
 @InputType()
 export class DetalleCompraDTO {
+
+    @IsDate()
+    @Field((type) => Date)
+    fechaCompra: Date
 
     @IsNumber()
     @Field((type) => Int)

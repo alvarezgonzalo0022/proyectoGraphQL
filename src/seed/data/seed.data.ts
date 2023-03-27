@@ -7,7 +7,6 @@ interface SeedReclamo {
     problema: string;
     detalleDeCompra: DetalleCompraDTO;
     imgURL?: string;
-    user?: SeedUser;
 }
 
 interface SeedUser {
@@ -43,6 +42,7 @@ export const initialData: SeedData = {
             descripcion: "Reclamo 1",
             problema: "Problema 1",
             detalleDeCompra: {
+                fechaCompra: new Date(),
                 nroFactura: 1,
                 codProd: "Codigo prod"
             },
@@ -53,6 +53,7 @@ export const initialData: SeedData = {
             descripcion: "Reclamo 2",
             problema: "Problema 2",
             detalleDeCompra: {
+                fechaCompra: new Date(),
                 nroFactura: 2,
                 codProd: "Codigo prod 2"
             },
@@ -63,6 +64,7 @@ export const initialData: SeedData = {
             descripcion: "Reclamo 3",
             problema: "Problema 3",
             detalleDeCompra: {
+                fechaCompra: new Date(),
                 nroFactura: 3,
                 codProd: "Codigo prod 3"
             },
