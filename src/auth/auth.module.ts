@@ -6,12 +6,13 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JWTStrategy } from './strategies/jwt.strategy';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   providers: [AuthService, AuthResolver, LocalStrategy, JWTStrategy],
   imports: [UsersModule, PassportModule, JwtModule.register({
     signOptions: { expiresIn: '2h' },
     secret: "TopSecretArea",
-  })]
+  }), ConfigModule]
 })
 export class AuthModule {}

@@ -39,6 +39,7 @@ type LoginResponse {
 type Query {
   reclamos(paginationDTO: PaginationDTO!): [Reclamo!]!
   reclamo(nro: Float!): Reclamo!
+  reclamosPorPalabraEnTituloOProblema(palabra: String!): [Reclamo!]!
   reclamosPorPalabra(palabra: String!): [Reclamo!]!
   users(paginationDTO: PaginationDTO!): [User!]!
   user(id: String!): User!
@@ -69,17 +70,11 @@ input CreateReclamoDTO {
   imgURL: String
   problema: String!
   idUser: String
-  user: CreateUserDTO
 }
 
 input DetalleCompraDTO {
   nroFactura: Int!
   codProd: String!
-}
-
-input CreateUserDTO {
-  username: String!
-  password: String!
 }
 
 input UpdateReclamoDTO {
@@ -95,6 +90,11 @@ input UpdateUserDTO {
 }
 
 input LoginInput {
+  username: String!
+  password: String!
+}
+
+input CreateUserDTO {
   username: String!
   password: String!
 }

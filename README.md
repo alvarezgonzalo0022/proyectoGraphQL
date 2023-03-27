@@ -43,3 +43,10 @@ localhost:3000/files/img
 ```
 localhost:3000/files/img/{imageName}
 ```
+
+11. En caso de querer utilizar base de datos de AWS
+Se debe cambiar el archivo app.module.ts y cambiar las variables de entorno a AWS, ejemplo:
+```
+DOCKER_DB_HOST
+AWS_DB_HOST
+```
