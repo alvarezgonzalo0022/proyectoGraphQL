@@ -5,8 +5,6 @@ import { ExtractJwt, Strategy } from "passport-jwt";
 
 @Injectable()
 export class JWTStrategy extends PassportStrategy(Strategy) {
-
-    
     
     constructor() {
         super({
@@ -21,6 +19,7 @@ export class JWTStrategy extends PassportStrategy(Strategy) {
         return {
             userid: payload.sub,
             username: payload.username,
+            role: payload.role,
         }
     }
 

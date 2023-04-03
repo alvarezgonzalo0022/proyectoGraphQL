@@ -5,6 +5,8 @@ import { UpdateUserDTO } from './dto/update-user.dto';
 import { UseGuards } from '@nestjs/common';
 import { JWTAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { PaginationDTO } from 'src/common/dto/pagination.dto';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { ValidRoles } from 'src/enums/valid-roles.enum';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -18,7 +20,9 @@ export class UsersResolver {
 
   @Query(() => User)
   @UseGuards(JWTAuthGuard)
-  user(@Args('id') id: string): Promise<User> {
+  user(@Args('id') id: string, @CurrentUser() user: User): Promise<User> {
+    console.log(user);
+    
     return this.usersService.findOneByID(id);
   }
 

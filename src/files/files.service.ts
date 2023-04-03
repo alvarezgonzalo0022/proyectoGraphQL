@@ -26,7 +26,7 @@ export class FilesService {
     
     if(!file) throw new BadRequestException('Make sure that the file is an image');
 
-    const secureURL = `http://localhost:${process.env.PORT}/files/img/${file.filename}`;
+    const secureURL = `http://localhost:${process.env.API_PORT}/files/img/${file.filename}`;
 
     await this.reclamoService.addImgToReclamo(nro, secureURL);
 

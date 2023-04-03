@@ -20,6 +20,9 @@ export class User {
   @Field()
   password: string;
 
+  @Column('varchar', {nullable: true })
+  role: string;
+
   @OneToMany(() => Reclamo, (reclamo) => reclamo.user)
   @Field((type) => [Reclamo])
   reclamos: Reclamo[];

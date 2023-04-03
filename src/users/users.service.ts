@@ -21,6 +21,7 @@ export class UsersService {
     const userToSave = {
       ...createUserDTO,
       password: await bcrypt.hash(createUserDTO.password, 10),
+      role: "USER"
     }
 
     this.userRepository.create(userToSave);

@@ -59,8 +59,8 @@ export class SeedService {
   }
 
   private async deleteDatabase() {
-    await this.userRepository.delete({});
     await this.reclamoRepository.delete({});
+    await this.userRepository.delete({});
     await this.detalleCompraRepository.delete({});
   }
 

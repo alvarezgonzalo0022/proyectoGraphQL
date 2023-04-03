@@ -12,6 +12,7 @@ interface SeedReclamo {
 interface SeedUser {
     username: string;
     password: string;
+    role: string;
 }
 
 interface SeedData {
@@ -25,14 +26,17 @@ export const initialData: SeedData = {
         {
             username: "test@test.com",
             password: bcrypt.hashSync("Abc123", 10),
+            role: "ADMIN"
         },
         {
             username: "test2@test.com",
             password: bcrypt.hashSync("123Abc", 10),
+            role: "USER"
         },
         {
             username: "test3@test.com",
             password: bcrypt.hashSync("A2c1b3", 10),
+            role: "USER"
         },
     ],
 
