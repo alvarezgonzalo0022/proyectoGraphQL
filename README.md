@@ -37,9 +37,9 @@ Authorization: Bearer (token)
 localhost:3000/graphql
 ```
 
-9. Para subir imagenes se debe hacer una peticion POST a el endpoint
+9. Para subir imagenes se debe hacer una peticion POST a el endpoint con el numero de reclamo en la url de request
 ```
-localhost:3000/files/img
+localhost:3000/files/img/:nro
 ```
 
 10. Para ver una imagen se debe hacer una peticion GET a el endpoint

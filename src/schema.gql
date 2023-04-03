@@ -73,6 +73,7 @@ input CreateReclamoDTO {
 }
 
 input DetalleCompraDTO {
+  fechaCompra: DateTime!
   nroFactura: Int!
   codProd: String!
 }

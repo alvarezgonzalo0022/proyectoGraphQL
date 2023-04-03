@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Param, UploadedFile, UseInterceptors, BadRequestException, Res } from '@nestjs/common';
+import { Controller, Get, Post, Param, UploadedFile, UseInterceptors, BadRequestException, Res, ParseIntPipe } from '@nestjs/common';
 import { FilesService } from './files.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { imgFileFilter } from './helpers/imgFileFilter.helper';
@@ -15,7 +15,7 @@ export class FilesController {
     return path;
   }
 
-  @Post('/img')
+  @Post('/img/:id')
   @UseInterceptors(FileInterceptor('img', {
     fileFilter: imgFileFilter,
     storage: diskStorage({
@@ -24,14 +24,10 @@ export class FilesController {
     })
   }))
   uploadReclamoIMG(
+    @Param('nro', ParseIntPipe) nro: number,
     @UploadedFile() file: Express.Multer.File
     ) {
-
-      if(!file) return new BadRequestException('Make sure that the file is an image');
-
-      const secureURL = `http://localhost:3002/files/img/${file.filename}`;
-
-      return secureURL;
+      this.filesService.saveImg(file, nro)
   }
 
 }

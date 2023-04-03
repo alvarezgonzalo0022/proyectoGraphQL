@@ -10,6 +10,6 @@ import { DetalleCompra } from './entity/detalleDeCompra.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([Reclamo, User, DetalleCompra]), UsersModule],
   providers: [ReclamosService, ReclamosResolver],
-  exports: [TypeOrmModule]
+  exports: [TypeOrmModule, ReclamosService]
 })
 export class ReclamosModule {}
