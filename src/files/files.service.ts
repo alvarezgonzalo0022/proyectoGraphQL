@@ -22,13 +22,13 @@ export class FilesService {
     return path;
   }
 
-  saveImg(file: Express.Multer.File, nro: number) {
+  async saveImg(file: Express.Multer.File, nro: number): Promise<String> {
     
-    if(!file) return new BadRequestException('Make sure that the file is an image');
+    if(!file) throw new BadRequestException('Make sure that the file is an image');
 
-    const secureURL = `http://localhost:3002/files/img/${file.filename}`;
+    const secureURL = `http://localhost:${process.env.PORT}/files/img/${file.filename}`;
 
-    this.reclamoService.addImgToReclamo(nro, secureURL);
+    await this.reclamoService.addImgToReclamo(nro, secureURL);
 
     return secureURL;
 
