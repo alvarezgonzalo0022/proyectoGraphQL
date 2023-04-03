@@ -29,7 +29,7 @@ schema.gql
 
 7. Al logearse con un usuario se le provee un token que se debe enviar en el header de cada request
 ```
-Bearer (token)
+Authorization: Bearer (token)
 ```
 
 8. Para probar los endpoints se puede utilizar el playground de graphql
