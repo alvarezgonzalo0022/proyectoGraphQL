@@ -7,12 +7,6 @@ import { DetalleCompraDTO } from "./create-detalle-compra.dto";
 @InputType()
 export class UpdateReclamoDTO {
 
-    @IsNumber()
-    @IsPositive()
-    @IsOptional()
-    @Field((type) => Int, { nullable: true })
-    nro?: number;
-
     @IsString()
     @IsOptional()
     @Field({ nullable: true })
@@ -20,8 +14,8 @@ export class UpdateReclamoDTO {
 
     @IsString()
     @IsOptional()
-    @Field((type) => DetalleCompraDTO , { nullable: true })
-    detalleDeCompra?: DetalleCompra;
+    @Field((type) => DetalleCompraDTO, { nullable: true })
+    detalleDeCompra?: DetalleCompraDTO;
 
     @IsString()
     @IsOptional()
