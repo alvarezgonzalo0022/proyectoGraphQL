@@ -56,10 +56,10 @@ export class UsersService {
     
     if (updateUserDTO.password) updateUserDTO.password = await bcrypt.hash(updateUserDTO.password, 10);
 
-    const userToSave = {
+    const userToSave = this.userRepository.create({
       ...user,
       ...updateUserDTO,
-    }
+    })
 
     return await this.userRepository.save(userToSave);
   }

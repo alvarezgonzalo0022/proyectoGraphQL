@@ -85,10 +85,10 @@ export class ReclamosService {
         if(!reclamoAActualizar) throw new BadRequestException('No existe el reclamo');
 
         try {
-            const reclamoAGuardar = {
+            const reclamoAGuardar = this.reclamosRepository.create({
                 ...reclamo,
                 ...reclamoAActualizar,
-            }
+            })
             await this.reclamosRepository.save(reclamoAGuardar);
             return reclamoAGuardar;
         } catch (error) {
