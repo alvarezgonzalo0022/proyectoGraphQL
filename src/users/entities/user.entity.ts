@@ -1,5 +1,6 @@
 import { ObjectType, Field } from '@nestjs/graphql';
-import { Reclamo } from 'src/reclamos/entity/reclamo.entity';
+import { Reclamo } from '../../reclamos/entity/reclamo.entity';
+
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity("users")

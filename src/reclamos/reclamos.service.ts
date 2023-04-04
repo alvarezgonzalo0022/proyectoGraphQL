@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
 import { CreateReclamoDTO } from './dto/create-reclamo.dto';
 import { UpdateReclamoDTO } from './dto/update-reclamo.dto';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '../users/users.service';
 import { PaginationDTO } from 'src/common/dto/pagination.dto';
 import { DetalleCompra } from './entity/detalleDeCompra.entity';
 
