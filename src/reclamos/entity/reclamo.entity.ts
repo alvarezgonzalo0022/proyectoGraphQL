@@ -28,6 +28,7 @@ export class Reclamo {
     imgURL?: string;
 
     @OneToOne(() => DetalleCompra, { cascade: true })
+    @JoinColumn({ name: 'detalleDeCompraID' })
     @Field((type) => DetalleCompra)
     detalleDeCompra: DetalleCompra;
 

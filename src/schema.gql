@@ -79,7 +79,6 @@ input DetalleCompraDTO {
 }
 
 input UpdateReclamoDTO {
-  nro: Int
   descripcion: String
   detalleDeCompra: DetalleCompraDTO
   problema: String
