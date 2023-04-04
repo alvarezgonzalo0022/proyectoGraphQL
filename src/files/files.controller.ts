@@ -15,7 +15,7 @@ export class FilesController {
     return path;
   }
 
-  @Post('/img/:id')
+  @Post('/img/:nro')
   @UseInterceptors(FileInterceptor('img', {
     fileFilter: imgFileFilter,
     storage: diskStorage({

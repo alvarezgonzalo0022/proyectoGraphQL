@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 
 import { GqlExecutionContext } from '@nestjs/graphql';
-import { ValidRoles } from 'src/enums/valid-roles.enum';
+import { ValidRoles } from 'src/common/enums/valid-roles.enum';
 
 import { User } from 'src/users/entities/user.entity';
 
