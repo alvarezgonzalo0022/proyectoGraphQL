@@ -27,7 +27,7 @@ export class Reclamo {
     @Field({ nullable: true })
     imgURL?: string;
 
-    @OneToOne(() => DetalleCompra, { cascade: true })
+    @OneToOne(() => DetalleCompra, { cascade: true, eager: true } )
     @JoinColumn({ name: 'detalleDeCompraID' })
     @Field((type) => DetalleCompra)
     detalleDeCompra: DetalleCompra;

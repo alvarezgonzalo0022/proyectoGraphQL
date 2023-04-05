@@ -26,19 +26,7 @@ export class ReclamosService {
       take: limit,
     });
 
-    const reclamosAMostrar = await Promise.all(
-      reclamos.map(async (reclamo) => {
-        const reclamoAMostrar = {
-          ...reclamo,
-          detalleDeCompra: await this.detalleCompraRepository.findOneBy({
-            id: reclamo.nro,
-          }),
-        };
-        return reclamoAMostrar;
-      }),
-    );
-
-    return reclamosAMostrar;
+    return reclamos;
   }
 
   async findOne(nro: number): Promise<Reclamo> {
@@ -86,19 +74,7 @@ export class ReclamosService {
       },
     });
 
-    const reclamosAMostrar = await Promise.all(
-      reclamos.map(async (reclamo) => {
-        const reclamoAMostrar = {
-          ...reclamo,
-          detalleDeCompra: await this.detalleCompraRepository.findOneBy({
-            id: reclamo.nro,
-          }),
-        };
-        return reclamoAMostrar;
-      }),
-    );
-
-    return reclamosAMostrar;
+    return reclamos;
   }
 
   async create(reclamo: CreateReclamoDTO): Promise<Reclamo> {
@@ -157,6 +133,7 @@ export class ReclamosService {
 
     try {
       await this.reclamosRepository.delete(reclamoAEliminar);
+      await this.detalleCompraRepository.delete(reclamoAEliminar.nro);
       return true;
     } catch (error) {
       throw new Error('Error al eliminar el reclamo');
