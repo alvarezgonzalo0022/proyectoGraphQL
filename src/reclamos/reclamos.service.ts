@@ -32,14 +32,7 @@ export class ReclamosService {
   async findOne(nro: number): Promise<Reclamo> {
     const reclamo = await this.reclamosRepository.findOneBy({ nro });
 
-    const reclamoAMostrar = {
-      ...reclamo,
-      detalleDeCompra: await this.detalleCompraRepository.findOneBy({
-        id: reclamo.nro,
-      }),
-    };
-
-    return reclamoAMostrar;
+    return reclamo;
   }
 
   async findManyInTituloOrProblema(term: string): Promise<Reclamo[]> {
@@ -50,19 +43,7 @@ export class ReclamosService {
       },
     });
 
-    const reclamosAMostrar = await Promise.all(
-      reclamos.map(async (reclamo) => {
-        const reclamoAMostrar = {
-          ...reclamo,
-          detalleDeCompra: await this.detalleCompraRepository.findOneBy({
-            id: reclamo.nro,
-          }),
-        };
-        return reclamoAMostrar;
-      }),
-    );
-
-    return reclamosAMostrar;
+    return reclamos;
   }
 
   async findMany(term: string): Promise<Reclamo[]> {
