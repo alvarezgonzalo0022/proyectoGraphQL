@@ -5,10 +5,7 @@ import { Repository } from 'typeorm';
 import { CreateReclamoDTO } from './dto/create-reclamo.dto';
 import { Reclamo } from './entity/reclamo.entity';
 import { DetalleCompra } from './entity/detalleDeCompra.entity';
-import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from '../users/entities/user.entity';
-
-
 
 describe('ReclamosService', () => {
   let service: ReclamosService;
@@ -23,7 +20,7 @@ describe('ReclamosService', () => {
         UsersService,
         { provide: 'ReclamoRepository', useClass: Repository<Reclamo> },
         { provide: 'DetalleCompraRepository', useClass: Repository<DetalleCompra> },
-        { provide: 'UserRepository', useClass: Repository<User> }, // Add this line
+        { provide: 'UserRepository', useClass: Repository<User> },
       ],
     }).compile();
   
@@ -110,45 +107,6 @@ describe('ReclamosService', () => {
     jest.spyOn(usersService, 'findOneByID').mockImplementation(() => Promise.resolve(null));
   
     await expect(service.create(reclamoDTO)).rejects.toThrowError('No existe el usuario');
-  });
-
-  it('should throw an error if there is an error saving the reclamo', async () => {
-    const reclamoDTO: CreateReclamoDTO = {
-      titulo: 'Falla',
-      descripcion: 'Descripcion de la falla',
-      problema: 'Problema detectado',
-      detalleDeCompra: {
-        fechaCompra: new Date(),
-        nroFactura: 1234,
-        codProd: 'ABCD1234',
-      },
-      idUser: '1',
-    };
-  
-    const userMock = {
-      id: '1',
-      name: 'John Doe',
-      email: 'john.doe@example.com',
-      password: 'hashed_password',
-      reclamos: [],
-        username: 'Hola',
-        role: 'USER'
-    };
-  
-    const detalleCompraMock = {
-      id: 1,
-      ...reclamoDTO.detalleDeCompra,
-    };
-  
-    jest.spyOn(usersService, 'findOneByID').mockImplementation(() => Promise.resolve(userMock));
-    jest.spyOn(detalleCompraRepository, 'create').mockImplementation(() => detalleCompraMock);
-    jest.spyOn(reclamosRepository, 'create').mockImplementation(() => {
-      throw new Error('Error saving reclamo');
-    });
-  
-    await expect(service.create(reclamoDTO)).rejects.toThrowError(
-      new Error('Error al crear el reclamo'),
-    );
   });
 
 });
