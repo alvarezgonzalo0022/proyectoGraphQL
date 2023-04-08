@@ -50,8 +50,8 @@ describe('ReclamosService', () => {
       email: 'john.doe@example.com',
       password: 'hashed_password',
       reclamos: [],
-        username: 'Hola',
-        role: 'USER'
+      username: 'Hola',
+      role: 'USER'
     };
 
     const detalleCompraMock = {

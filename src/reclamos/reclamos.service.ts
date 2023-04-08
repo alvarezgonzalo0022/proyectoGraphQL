@@ -31,9 +31,12 @@ export class ReclamosService {
   }
 
   async findOne(nro: number): Promise<Reclamo> {
-    const reclamo = await this.reclamosRepository.findOneBy({ nro });
-
-    return reclamo;
+    try {
+      return await this.reclamosRepository.findOneBy({ nro });
+    } catch (error) {
+      throw new BadRequestException('No existe el reclamo');
+    }
+    
   }
 
   async findManyInTituloOrProblema(term: string): Promise<Reclamo[]> {
@@ -64,9 +67,7 @@ export class ReclamosService {
     const userSavingReclamo = await this.usersService.findOneByID(user.id);
     if (!user) throw new BadRequestException('No existe el usuario');
     
-    const detalleDeCompra = this.detalleCompraRepository.create(
-      reclamo.detalleDeCompra,
-    );
+    const detalleDeCompra = this.detalleCompraRepository.create(reclamo.detalleDeCompra);
 
     try {
       const reclamoAGuardar = this.reclamosRepository.create({
@@ -88,10 +89,10 @@ export class ReclamosService {
   async update(nro: number, reclamo: UpdateReclamoDTO): Promise<Reclamo> {
 
     const reclamoAActualizar = await this.findOne(nro);
+    if (!reclamoAActualizar) throw new BadRequestException('No existe el reclamo');
+
     const detalleDeCompraAActualizar = reclamo.detalleDeCompra ? await this.detalleCompraRepository.findOneBy({ id: reclamoAActualizar.detalleDeCompra.id }) : null;
 
-    if (!reclamoAActualizar)
-      throw new BadRequestException('No existe el reclamo');
 
     try {
 
@@ -114,8 +115,7 @@ export class ReclamosService {
 
   async deleteOne(nro: number): Promise<boolean> {
     const reclamoAEliminar = await this.findOne(nro);
-    if (!reclamoAEliminar)
-      throw new BadRequestException('No existe el reclamo');
+    if (!reclamoAEliminar) throw new BadRequestException('No existe el reclamo');
 
     try {
       await this.reclamosRepository.delete(reclamoAEliminar);
