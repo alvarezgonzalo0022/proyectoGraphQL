@@ -27,9 +27,5 @@ export class CreateReclamoDTO {
     @Field()
     problema: string;
 
-    @IsString()
-    @IsOptional()
-    @Field({ nullable: true })
-    idUser?: string;
 
 }

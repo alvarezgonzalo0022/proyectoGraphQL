@@ -69,7 +69,6 @@ input CreateReclamoDTO {
   detalleDeCompra: DetalleCompraDTO!
   imgURL: String
   problema: String!
-  idUser: String
 }
 
 input DetalleCompraDTO {

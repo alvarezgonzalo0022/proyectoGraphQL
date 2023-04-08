@@ -7,6 +7,7 @@ import { UpdateReclamoDTO } from './dto/update-reclamo.dto';
 import { UsersService } from '../users/users.service';
 import { PaginationDTO } from 'src/common/dto/pagination.dto';
 import { DetalleCompra } from './entity/detalleDeCompra.entity';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class ReclamosService {
@@ -58,10 +59,9 @@ export class ReclamosService {
     return reclamos;
   }
 
-  async create(reclamo: CreateReclamoDTO): Promise<Reclamo> {
-    if (!reclamo.idUser)
-      throw new BadRequestException('Debe ingresar un usuario');
-    const user = await this.usersService.findOneByID(reclamo.idUser);
+  async create(reclamo: CreateReclamoDTO, user: User): Promise<Reclamo> {
+
+    const userSavingReclamo = await this.usersService.findOneByID(user.id);
     if (!user) throw new BadRequestException('No existe el usuario');
     const detalleDeCompra = this.detalleCompraRepository.create(
       reclamo.detalleDeCompra,
@@ -71,7 +71,7 @@ export class ReclamosService {
       const reclamoAGuardar = this.reclamosRepository.create({
         ...reclamo,
         detalleDeCompra: detalleDeCompra,
-        user: user,
+        user: userSavingReclamo,
       });
 
       const reclamoGuardado = await this.reclamosRepository.save(
