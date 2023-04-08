@@ -79,9 +79,15 @@ input DetalleCompraDTO {
 }
 
 input UpdateReclamoDTO {
+  titulo: String!
   descripcion: String
-  detalleDeCompra: DetalleCompraDTO
+  detalleDeCompra: UpdateDetalleCompraDTO
   problema: String
+}
+
+input UpdateDetalleCompraDTO {
+  nroFactura: Int
+  codProd: String
 }
 
 input UpdateUserDTO {

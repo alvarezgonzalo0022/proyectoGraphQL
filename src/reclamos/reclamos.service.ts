@@ -85,26 +85,30 @@ export class ReclamosService {
   }
 
   async update(nro: number, reclamo: UpdateReclamoDTO): Promise<Reclamo> {
-    if (reclamo.detalleDeCompra.fechaCompra)
-      throw new BadRequestException('No se puede modificar la fecha de compra');
 
     const reclamoAActualizar = await this.findOne(nro);
+    const detalleDeCompraAActualizar = reclamo.detalleDeCompra ? await this.detalleCompraRepository.findOneBy({ id: reclamoAActualizar.detalleDeCompra.id }) : null;
 
     if (!reclamoAActualizar)
       throw new BadRequestException('No existe el reclamo');
 
     try {
+
+      const detalleDeCompraAGuardar = detalleDeCompraAActualizar !== null ? this.detalleCompraRepository.create({ ...detalleDeCompraAActualizar, ...reclamo.detalleDeCompra }) : reclamoAActualizar.detalleDeCompra;
+      
       const reclamoAGuardar = this.reclamosRepository.create({
-        ...reclamo,
         ...reclamoAActualizar,
-      });
-      await this.reclamosRepository.save(reclamoAGuardar);
-      return reclamoAGuardar;
+        ...reclamo,
+        detalleDeCompra: detalleDeCompraAGuardar
+      })
+      
+
+      return await this.reclamosRepository.save(reclamoAGuardar)
     } catch (error) {
       console.log(error);
-
-      throw new Error('Error al actualizar el reclamo');
+      throw new BadRequestException('Error al actualizar el reclamo');  
     }
+
   }
 
   async deleteOne(nro: number): Promise<boolean> {

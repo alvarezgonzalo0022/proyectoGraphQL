@@ -3,7 +3,7 @@ import { ReclamosService } from './reclamos.service';
 import { Reclamo } from './entity/reclamo.entity';
 import { CreateReclamoDTO } from './dto/create-reclamo.dto';
 import { UpdateReclamoDTO } from './dto/update-reclamo.dto';
-import { UseGuards } from '@nestjs/common';
+import { ParseIntPipe, UseGuards } from '@nestjs/common';
 import { JWTAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { PaginationDTO } from 'src/common/dto/pagination.dto';
 
@@ -42,7 +42,7 @@ export class ReclamosResolver {
 
     @Mutation((returns) => Reclamo)
     @UseGuards(JWTAuthGuard)
-    updateReclamo(@Args('nro') nro: number, @Args('updateReclamoDTO') updateReclamoDTO: UpdateReclamoDTO): Promise<Reclamo> {
+    updateReclamo(@Args('nro', ParseIntPipe) nro: number, @Args('updateReclamoDTO') updateReclamoDTO: UpdateReclamoDTO): Promise<Reclamo> {
         return this.reclamosService.update(nro, updateReclamoDTO);
     }
 

@@ -6,6 +6,7 @@ import { CreateReclamoDTO } from './dto/create-reclamo.dto';
 import { Reclamo } from './entity/reclamo.entity';
 import { DetalleCompra } from './entity/detalleDeCompra.entity';
 import { User } from '../users/entities/user.entity';
+import { BadRequestException } from '@nestjs/common';
 
 describe('ReclamosService', () => {
   let service: ReclamosService;
@@ -109,4 +110,7 @@ describe('ReclamosService', () => {
     await expect(service.create(reclamoDTO)).rejects.toThrowError('No existe el usuario');
   });
 
+  
+
 });
+
