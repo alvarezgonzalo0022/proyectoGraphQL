@@ -42,7 +42,6 @@ describe('ReclamosService', () => {
         nroFactura: 1234,
         codProd: 'ABCD1234',
       },
-      idUser: '1',
     };
 
     const userMock = {
@@ -72,44 +71,10 @@ describe('ReclamosService', () => {
     jest.spyOn(reclamosRepository, 'create').mockImplementation(() => reclamoMock);
     jest.spyOn(reclamosRepository, 'save').mockImplementation(() => Promise.resolve(reclamoMock));
 
-    const result = await service.create(reclamoDTO);
+    const result = await service.create(reclamoDTO, userMock);
     console.log(result);
     expect(result).toEqual(reclamoMock);
   });
-
-  it('should throw BadRequestException if idUser is not provided', async () => {
-    const reclamoDTO: CreateReclamoDTO = {
-      titulo: 'Falla',
-      descripcion: 'Descripcion de la falla',
-      problema: 'Problema detectado',
-      detalleDeCompra: {
-        fechaCompra: new Date(),
-        nroFactura: 1234,
-        codProd: 'ABCD1234',
-      },
-    };
-  
-    await expect(service.create(reclamoDTO)).rejects.toThrowError('Debe ingresar un usuario');
-  });
-  
-  it('should throw BadRequestException if user does not exist', async () => {
-    const reclamoDTO: CreateReclamoDTO = {
-      titulo: 'Falla',
-      descripcion: 'Descripcion de la falla',
-      problema: 'Problema detectado',
-      detalleDeCompra: {
-        fechaCompra: new Date(),
-        nroFactura: 1234,
-        codProd: 'ABCD1234',
-      },
-      idUser: 'non_existent_user_id',
-    };
-  
-    jest.spyOn(usersService, 'findOneByID').mockImplementation(() => Promise.resolve(null));
-  
-    await expect(service.create(reclamoDTO)).rejects.toThrowError('No existe el usuario');
-  });
-
   
 
 });

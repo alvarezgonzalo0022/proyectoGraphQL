@@ -63,6 +63,7 @@ export class ReclamosService {
 
     const userSavingReclamo = await this.usersService.findOneByID(user.id);
     if (!user) throw new BadRequestException('No existe el usuario');
+    
     const detalleDeCompra = this.detalleCompraRepository.create(
       reclamo.detalleDeCompra,
     );
