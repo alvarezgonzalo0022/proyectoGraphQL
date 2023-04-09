@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { existsSync } from 'fs';
 import { join } from 'path';
 import { ReclamosService } from 'src/reclamos/reclamos.service';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class FilesService {
@@ -22,13 +23,13 @@ export class FilesService {
     return path;
   }
 
-  async saveImg(file: Express.Multer.File, nro: number): Promise<String> {
+  async saveImg(file: Express.Multer.File, nro: number, user: User): Promise<String> {
     
     if(!file) throw new BadRequestException('Make sure that the file is an image');
 
     const secureURL = `http://localhost:${process.env.API_PORT}/files/img/${file.filename}`;
 
-    await this.reclamoService.addImgToReclamo(nro, secureURL);
+    await this.reclamoService.addImgToReclamo(nro, secureURL, user);
 
     return secureURL;
 

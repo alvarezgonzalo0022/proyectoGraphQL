@@ -56,7 +56,6 @@ type Mutation {
   createReclamo(createReclamoDTO: CreateReclamoDTO!): Reclamo!
   updateReclamo(nro: Float!, updateReclamoDTO: UpdateReclamoDTO!): Reclamo!
   deleteReclamo(nro: Float!): Boolean!
-  addImgToReclamo(nro: Int!, imgURL: String!): Reclamo!
   updateUser(updateUserDTO: UpdateUserDTO!, id: String!): User!
   removeUser(id: String!): User!
   login(loginUserInput: LoginInput!): LoginResponse!

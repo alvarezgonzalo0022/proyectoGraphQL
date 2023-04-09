@@ -19,53 +19,83 @@ export class ReclamosService {
     private readonly usersService: UsersService,
   ) {}
 
-  async findAll(paginationDTO: PaginationDTO): Promise<Reclamo[]> {
+  async findAll(paginationDTO: PaginationDTO, user: User): Promise<Reclamo[]> {
+    
     const { limit = 10, offset = 0 } = paginationDTO;
 
-    const reclamos = await this.reclamosRepository.find({
+    const userInDB = await this.usersService.findOneByUsername(user.username);
+
+    if(user.role === "ADMIN") return await this.reclamosRepository.find({
       skip: offset,
       take: limit,
     });
 
-    return reclamos;
+    if(user.role === "USER") return await this.reclamosRepository.find({
+        skip: offset,
+        take: limit,
+        where: {
+          user: userInDB
+        }
+      });
   }
 
-  async findOne(nro: number): Promise<Reclamo> {
+  async findOne(nro: number, user: User): Promise<Reclamo> {
+
+    const userInDB = await this.usersService.findOneByUsername(user.username);
+
     try {
-      return await this.reclamosRepository.findOneBy({ nro });
+      if(user.role === "USER") return await this.reclamosRepository.findOneBy({ nro, user: userInDB });
+      if(user.role === "ADMIN") return await this.reclamosRepository.findOneBy({ nro });
     } catch (error) {
-      throw new BadRequestException('No existe el reclamo');
+      throw new BadRequestException('No existe reclamo con ese nro asociado al usuario provisto');
     }
     
   }
 
-  async findManyInTituloOrProblema(term: string): Promise<Reclamo[]> {
-    const reclamos = await this.reclamosRepository.find({
+  async findManyInTituloOrProblema(term: string, user: User): Promise<Reclamo[]> {
+
+    const userInDB = await this.usersService.findOneByUsername(user.username);
+
+    if(user.role === "USER") return await this.reclamosRepository.find({
+      where: {
+        titulo: Like(`%${term}%`),
+        problema: Like(`%${term}%`),
+        user: userInDB
+      },
+    })
+
+    if(user.role === "ADMIN") return await this.reclamosRepository.find({
       where: {
         titulo: Like(`%${term}%`),
         problema: Like(`%${term}%`),
       },
     });
 
-    return reclamos;
   }
 
-  async findMany(term: string): Promise<Reclamo[]> {
-    const reclamos = await this.reclamosRepository.find({
+  async findMany(term: string, user: User): Promise<Reclamo[]> {
+
+    const userInDB = await this.usersService.findOneByUsername(user.username);
+
+    if(user.role === "USER") return await this.reclamosRepository.find({
+      where: {
+        titulo: Like(`%${term}%`),
+        descripcion: Like(`%${term}%`),
+        problema: Like(`%${term}%`),
+        user: userInDB
+      },
+    });
+
+    if(user.role === "ADMIN") return await this.reclamosRepository.find({
       where: {
         titulo: Like(`%${term}%`),
         descripcion: Like(`%${term}%`),
         problema: Like(`%${term}%`),
       },
     });
-
-    return reclamos;
   }
 
   async create(reclamo: CreateReclamoDTO, user: User): Promise<Reclamo> {
-
-    const userSavingReclamo = await this.usersService.findOneByID(user.id);
-    if (!user) throw new BadRequestException('No existe el usuario');
     
     const detalleDeCompra = this.detalleCompraRepository.create(reclamo.detalleDeCompra);
 
@@ -73,7 +103,7 @@ export class ReclamosService {
       const reclamoAGuardar = this.reclamosRepository.create({
         ...reclamo,
         detalleDeCompra: detalleDeCompra,
-        user: userSavingReclamo,
+        user: await this.usersService.findOneByUsername(user.username),
       });
 
       const reclamoGuardado = await this.reclamosRepository.save(
@@ -86,9 +116,9 @@ export class ReclamosService {
     }
   }
 
-  async update(nro: number, reclamo: UpdateReclamoDTO): Promise<Reclamo> {
+  async update(nro: number, reclamo: UpdateReclamoDTO, user: User): Promise<Reclamo> {
 
-    const reclamoAActualizar = await this.findOne(nro);
+    const reclamoAActualizar = await this.findOne(nro, user);
     if (!reclamoAActualizar) throw new BadRequestException('No existe el reclamo');
 
     const detalleDeCompraAActualizar = reclamo.detalleDeCompra ? await this.detalleCompraRepository.findOneBy({ id: reclamoAActualizar.detalleDeCompra.id }) : null;
@@ -103,7 +133,6 @@ export class ReclamosService {
         ...reclamo,
         detalleDeCompra: detalleDeCompraAGuardar
       })
-      
 
       return await this.reclamosRepository.save(reclamoAGuardar)
     } catch (error) {
@@ -113,8 +142,8 @@ export class ReclamosService {
 
   }
 
-  async deleteOne(nro: number): Promise<boolean> {
-    const reclamoAEliminar = await this.findOne(nro);
+  async deleteOne(nro: number, user: User): Promise<boolean> {
+    const reclamoAEliminar = await this.findOne(nro, user);
     if (!reclamoAEliminar) throw new BadRequestException('No existe el reclamo');
 
     try {
@@ -126,8 +155,8 @@ export class ReclamosService {
     }
   }
 
-  async addImgToReclamo(nro: number, imgURL: string): Promise<Reclamo> {
-    const reclamo = await this.findOne(nro);
+  async addImgToReclamo(nro: number, imgURL: string, user: User): Promise<Reclamo> {
+    const reclamo = await this.findOne(nro, user);
 
     if (!reclamo) throw new BadRequestException('No existe el reclamo');
 

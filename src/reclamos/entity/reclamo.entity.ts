@@ -32,7 +32,7 @@ export class Reclamo {
     @Field((type) => DetalleCompra)
     detalleDeCompra: DetalleCompra;
 
-    @ManyToOne(() => User, (user) => user.reclamos, { cascade: true })
+    @ManyToOne(() => User, (user) => user.reclamos, { cascade: true, eager: true })
     @Field((type) => User)
     @JoinColumn({ name: 'userID' })
     user: User;

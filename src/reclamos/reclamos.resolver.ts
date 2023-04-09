@@ -1,4 +1,4 @@
-import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { ReclamosService } from './reclamos.service';
 import { Reclamo } from './entity/reclamo.entity';
 import { CreateReclamoDTO } from './dto/create-reclamo.dto';
@@ -17,23 +17,27 @@ export class ReclamosResolver {
     ) {}
     
     @Query((returns) => [Reclamo])
-    reclamos(@Args("paginationDTO") paginationDTO: PaginationDTO): Promise<Reclamo[]> {
-        return this.reclamosService.findAll(paginationDTO);
+    @UseGuards(JWTAuthGuard)
+    reclamos(@Args("paginationDTO") paginationDTO: PaginationDTO, @CurrentUser() user: User): Promise<Reclamo[]> {
+        return this.reclamosService.findAll(paginationDTO, user);
     }
 
     @Query((returns) => Reclamo)
-    reclamo(@Args('nro') nro: number): Promise<Reclamo> {
-        return this.reclamosService.findOne(nro);
+    @UseGuards(JWTAuthGuard)
+    reclamo(@Args('nro') nro: number, @CurrentUser() user: User): Promise<Reclamo> {
+        return this.reclamosService.findOne(nro, user);
     }
 
     @Query((returns) => [Reclamo])
-    reclamosPorPalabraEnTituloOProblema(@Args('palabra') palabra: string): Promise<Reclamo[]> {
-        return this.reclamosService.findMany(palabra);
+    @UseGuards(JWTAuthGuard)
+    reclamosPorPalabraEnTituloOProblema(@Args('palabra') palabra: string, @CurrentUser() user: User): Promise<Reclamo[]> {
+        return this.reclamosService.findMany(palabra, user);
     }
 
     @Query((returns) => [Reclamo])
-    reclamosPorPalabra(@Args('palabra') palabra: string): Promise<Reclamo[]> {
-        return this.reclamosService.findMany(palabra);
+    @UseGuards(JWTAuthGuard)
+    reclamosPorPalabra(@Args('palabra') palabra: string, @CurrentUser() user: User): Promise<Reclamo[]> {
+        return this.reclamosService.findMany(palabra, user);
     }
 
     @Mutation((returns) => Reclamo)
@@ -44,20 +48,14 @@ export class ReclamosResolver {
 
     @Mutation((returns) => Reclamo)
     @UseGuards(JWTAuthGuard)
-    updateReclamo(@Args('nro', ParseIntPipe) nro: number, @Args('updateReclamoDTO') updateReclamoDTO: UpdateReclamoDTO): Promise<Reclamo> {
-        return this.reclamosService.update(nro, updateReclamoDTO);
+    updateReclamo(@Args('nro', ParseIntPipe) nro: number, @Args('updateReclamoDTO') updateReclamoDTO: UpdateReclamoDTO, @CurrentUser() user: User): Promise<Reclamo> {
+        return this.reclamosService.update(nro, updateReclamoDTO, user);
     }
 
     @Mutation((returns) => Boolean)
     @UseGuards(JWTAuthGuard)
-    deleteReclamo(@Args('nro') nro: number): Promise<boolean> {
-        return this.reclamosService.deleteOne(nro);
-    }
-
-    @Mutation((returns) => Reclamo)
-    @UseGuards(JWTAuthGuard)
-    addImgToReclamo(@Args('nro', { type: () => Int }) nro: number, @Args('imgURL') imgURL: string): Promise<Reclamo> {
-        return this.reclamosService.addImgToReclamo(nro, imgURL);
+    deleteReclamo(@Args('nro') nro: number, @CurrentUser() user: User): Promise<boolean> {
+        return this.reclamosService.deleteOne(nro, user);
     }
 
 }

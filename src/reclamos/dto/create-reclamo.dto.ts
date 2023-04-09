@@ -1,6 +1,5 @@
 import { Field, InputType } from "@nestjs/graphql";
 import { IsIn, IsOptional, IsString } from "class-validator";
-import { CreateUserDTO } from "src/users/dto/create-user.dto";
 import { DetalleCompraDTO } from "./create-detalle-compra.dto";
 
 @InputType()

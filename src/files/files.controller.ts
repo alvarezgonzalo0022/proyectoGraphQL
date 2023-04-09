@@ -1,9 +1,12 @@
-import { Controller, Get, Post, Param, UploadedFile, UseInterceptors, BadRequestException, Res, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Param, UploadedFile, UseInterceptors, Res, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { FilesService } from './files.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { imgFileFilter } from './helpers/imgFileFilter.helper';
 import { diskStorage } from 'multer';
 import { fileNamer } from './helpers/fileNamer.helper';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { User } from 'src/users/entities/user.entity';
+import { JWTAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('files')
 export class FilesController {
@@ -16,6 +19,7 @@ export class FilesController {
   }
 
   @Post('/img/:nro')
+  @UseGuards(JWTAuthGuard)
   @UseInterceptors(FileInterceptor('img', {
     fileFilter: imgFileFilter,
     storage: diskStorage({
@@ -25,9 +29,10 @@ export class FilesController {
   }))
   uploadReclamoIMG(
     @Param('nro', ParseIntPipe) nro: number,
-    @UploadedFile() file: Express.Multer.File
+    @UploadedFile() file: Express.Multer.File,
+    @CurrentUser() user: User
     ) {
-      this.filesService.saveImg(file, nro)
+      this.filesService.saveImg(file, nro, user)
   }
 
 }
